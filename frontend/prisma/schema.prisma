@@ -18,10 +18,79 @@ enum Role {
   Seller
 }
 
+enum Availability {
+  Available
+  Out_of_stock
+}
+
+enum Order_Status {
+  pending
+  shipped
+}
+
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  name     String?
-  password String
-  role     Role    @default(User)
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      Role     @default(User)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+model Shop {
+  id           String    @id @default(uuid())
+  name         String
+  address      String
+  rating       Int
+  contact_info String
+  isActive     Boolean
+  products     Product[]
+
+  ShopKeeper    ShopKeeper @relation(fields: [Shopkeeper_id], references: [shopkeeper_id])
+  Shopkeeper_id String
+}
+
+model ShopKeeper {
+  shopkeeper_id String @id @default(uuid())
+  name          String
+  contact_info  String
+  managed_shops Int
+  shops         Shop[]
+  role          Role   @default(Seller)
+}
+
+model Product {
+  pid         String       @id @default(uuid())
+  name        String
+  description String
+  category    String[]
+  price       Int
+  image       String
+  status      Availability
+  Shop        Shop         @relation(fields: [shopId], references: [id])
+  shopId      String
+  OrderItems  OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  quantity  Int
+  Order     Order   @relation(fields: [OrderId], references: [order_id])
+  OrderId   String
+  Product   Product @relation(fields: [ProductId], references: [pid])
+  ProductId String
+}
+
+model Order {
+  order_id     String       @id @default(uuid())
+  total_amount Int
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  status       Order_Status
+  User         User         @relation(fields: [userId], references: [id])
+  userId       String
+  items        OrderItem[]
 }
