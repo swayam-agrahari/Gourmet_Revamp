@@ -15,7 +15,7 @@ export async function GET() {
     } catch (error) {
         console.log(error)
         return NextResponse.json({
-            "msg": "No pruducts found"
+            "msg": "No products found"
         }, {
             status: 404
         })
@@ -23,3 +23,4 @@ export async function GET() {
 
 
 }
+
