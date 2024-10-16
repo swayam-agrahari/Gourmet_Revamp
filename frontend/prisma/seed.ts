@@ -29,6 +29,7 @@ async function main() {
         const shopKeeper = await db.shopKeeper.create({
             data: {
                 name: 'Jane Smith',
+                password: "123123123",
                 contact_info: "1234567890",
                 managed_shops: 1,
                 role: Role.Seller,
@@ -52,7 +53,7 @@ async function main() {
             {
                 name: 'Product 1',
                 description: 'Description for product 1',
-                category: ['Category A', 'Category B'],
+                category: "Electronics",
                 price: 1000,
                 image: 'https://example.com/image1.jpg',
                 status: Availability.Available,
@@ -61,7 +62,7 @@ async function main() {
             {
                 name: 'Product 2',
                 description: 'Description for product 2',
-                category: ['Category C'],
+                category: "Clothes",
                 price: 2000,
                 image: 'https://example.com/image2.jpg',
                 status: Availability.Out_of_stock,

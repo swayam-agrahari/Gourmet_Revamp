@@ -24,8 +24,11 @@ enum Availability {
 }
 
 enum Order_Status {
+  cancelled
   pending
   shipped
+  delivered
+  returned
 }
 
 model User {
@@ -41,14 +44,13 @@ model User {
 }
 
 model Shop {
-  id           String    @id @default(uuid())
-  name         String
-  address      String
-  rating       Int
-  contact_info String
-  isActive     Boolean
-  products     Product[]
-
+  id            String     @id @default(uuid())
+  name          String
+  address       String
+  rating        Float
+  contact_info  String
+  isActive      Boolean
+  products      Product[]
   ShopKeeper    ShopKeeper @relation(fields: [Shopkeeper_id], references: [shopkeeper_id])
   Shopkeeper_id String
 }
@@ -56,6 +58,7 @@ model Shop {
 model ShopKeeper {
   shopkeeper_id String @id @default(uuid())
   name          String
+  password      String
   contact_info  String
   managed_shops Int
   shops         Shop[]
@@ -67,7 +70,7 @@ model Product {
   name        String
   description String
   category    String
-  price       Int
+  price       Float
   image       String
   status      Availability
   Shop        Shop         @relation(fields: [shopId], references: [id])
@@ -86,7 +89,7 @@ model OrderItem {
 
 model Order {
   order_id     String       @id @default(uuid())
-  total_amount Int
+  total_amount Float
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   status       Order_Status
