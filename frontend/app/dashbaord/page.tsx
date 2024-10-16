@@ -1,6 +1,8 @@
 "use client";
 
+import { Appbar } from "@/components/Appbar";
 import { Product } from "@prisma/client";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -31,7 +33,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 export function Dashboard() {
     const [products, setProducts] = useState<Product[]>([]); // Correctly initialized as an array
-
+    const session = useSession();
     useEffect(() => {
         // fetch('/api/products')
         //     .then(res => res.json())
@@ -57,13 +59,16 @@ export function Dashboard() {
     }, []);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-screen-xl mx-auto px-5 py-8">
-            {
-                products.map(product => (
-                    <ProductCard key={product.pid} product={product} />
-                )
+        <div>
+            <Appbar onSignin={signIn} onSignout={signOut} user={session.data?.user} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-screen-xl mx-auto px-5 py-8">
+                {
+                    products.map(product => (
+                        <ProductCard key={product.pid} product={product} />
+                    )
 
-                )}
+                    )}
+            </div>
         </div>
     );
 }
