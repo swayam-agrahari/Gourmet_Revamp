@@ -10,7 +10,9 @@ import Image from "next/image";
 
 interface AppbarProps {
     user?: {
+        id?: string;
         name?: string | null;
+        role?: string
     },
     onSignin: () => void,
     onSignout: () => void
