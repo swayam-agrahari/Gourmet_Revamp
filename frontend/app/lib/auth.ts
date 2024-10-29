@@ -2,13 +2,15 @@
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
 import db from "@/app/lib/db"
-
+import { User, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 
 export const authOptions = {
     providers: [
         CredentialsProvider({
-            name: "User Credentials",
+            id: "credentials",
+            name: "credentials",
             credentials: {
                 email: { label: "Email", type: "text", placeholder: "jsmith@gmail.com", required: true },
                 password: { label: "Password", type: "password", required: true }
@@ -43,13 +45,14 @@ export const authOptions = {
                         data: {
                             email: credentials.email,
                             password: hashedPass
+
                         }
                     });
                     return ({
                         id: user.id.toString(),
                         email: user.email,
                         name: user?.name,
-                        role: user.role,
+                        role: "User",
                         createdAt: user.createdAt,
 
                     })
@@ -62,7 +65,8 @@ export const authOptions = {
             }
         }),
         CredentialsProvider({
-            name: "Shopkeeper Credentials",
+            id: "credentials-shopkeeper",
+            name: "credentials-shopkeeper",
             credentials: {
                 name: { label: "Name", type: "name", placeholder: "Ashley", required: true },
                 contactInfo: { label: "Phone Number", type: "phone", placeholder: "9876543210", required: true },
@@ -98,13 +102,15 @@ export const authOptions = {
                             contact_info: credentials.contactInfo,
                             password: hashedPass,
                             managed_shops: 0,
-                            name: credentials.name
+                            name: credentials.name,
+
                         }
                     });
                     return ({
                         id: user.shopkeeper_id.toString(),
                         contact_info: user.contact_info,
-                        name: user?.name
+                        name: user?.name,
+                        role: "Seller"
                     })
                 } catch (error) {
                     console.log(error)
@@ -115,9 +121,29 @@ export const authOptions = {
             }
         })
     ],
+    pages: {
+        signIn: '/login',
+        signOut: '/',
+    },
 
-
+    callbacks: {
+        async session({ session, token }: { session: Session, token: JWT }): Promise<Session> {
+            // Attach the role and id from the token to the session
+            if (token) {
+                session.user.id = token.id as string;
+                session.user.role = token.role as string;
+            }
+            return session;
+        },
+        async jwt({ token, user }: { token: JWT, user?: User }): Promise<JWT> {
+            // Attach user details (id, role) to the JWT token
+            if (user) {
+                console.log("User in JWT callback: ", user);
+                token.id = user.id as string;
+                token.role = user.role as string;
+            }
+            return token;
+        },
+    },
     secret: process.env.JWT_SECRET || "secret",
-
-}
-
+};
