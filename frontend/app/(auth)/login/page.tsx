@@ -24,7 +24,7 @@ const UserSignIn = () => {
             console.log("Error signing in as user", result.error)
         }
         else {
-            Router.push("/dashboard")
+            Router.push("/login")
         }
 
 

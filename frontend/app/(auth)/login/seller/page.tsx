@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SellerSignIn = () => {
+    const [name, setName] = useState("")
     const [contactInfo, setContactInfo] = useState("");
     const [password, setPassword] = useState("");
     const Router = useRouter();
 
     async function handleSubmit() {
-        const result = await signIn('credentials', {
+        const result = await signIn('credentials-shopkeeper', {
+            name,
             contactInfo,
             password,
             callbackUrl: "/dashboard"
@@ -31,6 +33,7 @@ const SellerSignIn = () => {
                 <div className="text-2xl p-8">Are you a seller?</div>
 
                 <div className="flex flex-col gap-6 justify-center items-center">
+                    <input className="p-4 bg-gray-200" type="text" placeholder="Ram" onChange={(e) => { setName(e.target.value) }} value={name} />
                     <input className="p-4 bg-gray-200" type="text" placeholder="9876543210" value={contactInfo} onChange={(e) => { setContactInfo(e.target.value) }} />
                     <input className="p-4 bg-gray-200" type="password" placeholder="password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                 </div>
