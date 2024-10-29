@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Shop" ALTER COLUMN "rating" SET DEFAULT 0,
+ALTER COLUMN "isActive" SET DEFAULT true;

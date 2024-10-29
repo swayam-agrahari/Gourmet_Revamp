@@ -46,11 +46,11 @@ model User {
 model Shop {
   id            String     @id @default(uuid())
   name          String
-  address       String
-  rating        Float
+  address       String      
+  rating        Float      @default(0)
   contact_info  String
-  isActive      Boolean
-  products      Product[]
+  isActive      Boolean   @default(true)
+  products      Product[]  
   ShopKeeper    ShopKeeper @relation(fields: [Shopkeeper_id], references: [shopkeeper_id])
   Shopkeeper_id String
 }
