@@ -4,8 +4,8 @@ import React from "react";
 import StarReview from "@/components/StarReview";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { headers } from "next/headers"
-import { NextResponse } from "next/server";
+import Image from "next/image";
+import Modal from "@/components/Modal";
 
 interface Shop {
     id: string;
@@ -49,20 +49,27 @@ export default async function Shop() {
     }
 
     if (shopDetails.length === 0) {
-        return <div>No shops found. Please add a shop.</div>;
+        return <div>
+            <div className="p-2">
+                No shops found. Please add a shop.
+            </div>
+            <Modal></Modal>
+        </div>;
     }
 
     return (
         <>
-            <div className="px-4 border border-red-500">Your Shops</div>
+
+            <Modal></Modal>
             {shopDetails.map((shop) => (
                 <div key={shop.id} className="bg-white p-8">
                     <div className="flex w-full items-center">
                         <div className="w-40 mr-8">
-                            <img
-                                src={shop.image || "https://upload.wikimedia.org/wikipedia/sco/b/bf/KFC_logo.svg"} // Add fallback
+                            <Image
+                                src={"https://upload.wikimedia.org/wikipedia/sco/b/bf/KFC_logo.svg"} // Add fallback
                                 alt="Shop Placeholder"
                                 className="bg-green-200 w-40 h-40 aspect-auto rounded-full object-cover"
+                                width={40} height={40}
                             />
                         </div>
                         <div className="w-2/3">
