@@ -16,12 +16,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }, {
             icon: <Package />,
             label: "Products",
-            path: "/seller/shops"
+            path: "/seller/products"
         },
         {
             icon: <ShoppingBag />,
             label: "Orders",
-            path: "/seller/Orders"
+            path: "/seller/orders"
         }, {
             icon: <ChartNoAxesCombined />,
             label: "StAnalyticsore",
@@ -39,7 +39,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="w-screen h-screen flex ">
             <SellerSidebar links={Links} />
 
-            <div className="w-4/5 bg-sky-50 p-8">{children}</div>
+            <div className="w-4/5 h-fit bg-gray-50 rounded-lg   p-8">{children}</div>
         </div>
 
     </>

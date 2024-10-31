@@ -58,11 +58,11 @@ export default async function Shop() {
     }
 
     return (
-        <>
+        <div className="">
 
             <Modal></Modal>
             {shopDetails.map((shop) => (
-                <div key={shop.id} className="bg-white p-8">
+                <div key={shop.id} className="bg-white p-8 my-2">
                     <div className="flex w-full items-center">
                         <div className="w-40 mr-8">
                             <Image
@@ -88,6 +88,6 @@ export default async function Shop() {
                     </div>
                 </div>
             ))}
-        </>
+        </div>
     );
 }
