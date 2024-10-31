@@ -1,6 +1,6 @@
 "use client";
 import { X } from "lucide-react";
-import { Button1 } from "./Button";
+import { Button, Button1 } from "./Button";
 import { FormEvent, useState } from "react";
 import { createShop } from "@/app/(core)/api/seller/shops/shopActions";
 
@@ -11,13 +11,10 @@ export default function Modal() {
     const [message, setMessage] = useState("");
     const [isOpen, setIsOpen] = useState(false)
 
-    // Server action defined within the same file
-
-
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        // Create FormData to send to the server action
+
         const formData = new FormData();
         formData.append("Name", name);
         formData.append("Address", address);
@@ -26,13 +23,11 @@ export default function Modal() {
         const response = await createShop(formData);
         setMessage(response.message);
 
-        // Optionally reset the form or close the modal
         if (response.message === "Success") {
             setName("");
             setAddress("");
             setContact("");
             setIsOpen(false);
-            // Handle closing the modal here if needed
         }
     };
 
@@ -42,7 +37,7 @@ export default function Modal() {
 
     return (
         <>
-            <button onClick={toggleModal} className="p-3 bg-slate-700 text-white rounded-lg ">Add  Shop</button>
+            <Button onClick={toggleModal}>Add  Shop</Button>
             {isOpen && <div className="fixed inset-0 z-10 flex justify-center items-center backdrop-blur-sm">
                 <div className=" opacity-50 inset-0 bg-black z-0 absolute" onClick={() => setIsOpen(false)}></div>
                 <div className=" border border-gray-50  z-20 bg-white rounded-md text-black w-1/4 h-1/3 shadow-lg" >
