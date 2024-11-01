@@ -1,30 +1,55 @@
+import { authOptions } from '@/app/lib/auth';
 import db from '@/app/lib/db'
-import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
 
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-    const { sellerId } = req.query;
-    if (!sellerId) return res.status(400).json({ error: "NO seller id found" })
+export async function GET() {
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json({ message: "You are not logged in." }, {
+        status: 404
+    })
+
+    const sellerId = session?.user?.id;
+    if (!sellerId) return NextResponse.json({ error: "NO seller id found" }, {
+        status: 400
+    })
     try {
-        const sellerProducts = await db.shopKeeper.findMany({
+        const shops = await db.shop.findMany({
             where: {
-                shopkeeper_id: sellerId
+                Shopkeeper_id: sellerId
             },
-            include: {
-                shops: {
-                    include: {
-                        products: true
+            select: {
+                products: {
+                    select: {
+                        pid: true,
+                        name: true,
+                        description: true,
+                        category: true,
+                        price: true,
+                        image: true,
+                        status: true,
+                        rating: true,
                     }
                 }
             }
         })
-        if (!sellerProducts) {
-            return res.status(500).json({ error: "NO seller data" })
+        if (!shops) {
+            return NextResponse.json({ error: "NO products available" }, {
+                status: 500
+            })
         }
+        const allProducts = shops.flatMap((shop => shop.products))
+        const topProducts = allProducts.sort((a, b) => b.rating - a.rating).slice(0, 10)
+        return NextResponse.json({
+            topProducts: topProducts
+        })
 
     } catch (error) {
         console.log(error)
-        return res.status(404).json({ error: error })
+        return NextResponse.json({ error: error }, {
+            status: 404
+        })
     }
 }
 
