@@ -72,6 +72,7 @@ model Product {
   category    String
   price       Float
   image       String
+  rating      Float      @default(0)
   status      Availability
   Shop        Shop         @relation(fields: [shopId], references: [id])
   shopId      String
